@@ -1,0 +1,51 @@
+.dashboardHeader{
+    color: white;
+    -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box;    
+    box-sizing: border-box;
+    background-color: #4E31AA;
+    height: 10vh;
+    max-height: 10vh;
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    padding: 10px;
+}
+
+.dashboardIcon{
+    width: 8vh;
+    height: 8vh;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dashboardIcon img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.dropdownMenu ul{
+    background-color: #2F58CD;
+}
+
+.dropdownMenu li:hover{
+    background-color: #4a6ed1;
+}
+
+.sideBySide{
+    display: flex;
+    gap: 1rem;
+}
+
+.dashboardMain{
+    padding: 10px;
+}
+
+.dashboardCard{
+    padding: 10px;
+}
+
+.dashboardPeople{
+    padding: 10px;
+}

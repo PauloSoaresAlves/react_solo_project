@@ -1,11 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import LoginComponent from './components/login_component'
+import DashboardComponent from './components/dashboard/dashboard_component';
+import LoginComponent from './components/loginComponents/login_component'
 
 export default function App() {
+    const [logedin, setlogedin] = React.useState(false);
+    const [userData, setUserData] = React.useState({name: "", password: "", id_perfil: 0, pessoas: []});
+
+
     return (
         <div className="mainContainer">
-            <LoginComponent/>
+            {logedin ?  <DashboardComponent userData={userData}/> :  <LoginComponent setlogedin={setlogedin} setUserData={setUserData}/>}
         </div>
     )
 }

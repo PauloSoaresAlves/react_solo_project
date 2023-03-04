@@ -1,27 +1,24 @@
 const { request } = require('express');
-const config = require('./config.js');
-
-const Pool = require('pg').Pool
-const pool = new Pool(config);
+const pessoa_model = require('./pessoa_model.js')
 
 
-const getPerfil = (body) => {
+
+const getPerfil = (body,pool) => {
   return new Promise(function(resolve, reject) {
     const { id } = body
     pool.query('SELECT * FROM perfil where id_perfil = $1', [id] ,(error, results) => {
       if (error) {
         reject(error)
       }
-      console.log(results.rows)
       resolve(results.rows);
     })
   }) 
 }
 
-const login = (body) => {
+const  login = (body,pool) => {
   return new Promise(function(resolve, reject) {
     const { login, senha } = body
-    pool.query('SELECT * FROM perfil where login = $1 AND password = $2', [login, senha] ,(error, results) => {
+    pool.query('SELECT * FROM perfil where login = $1 AND password = $2', [login, senha] ,async (error, results) => {
       if (error) {
         reject(error)
       }
@@ -30,7 +27,7 @@ const login = (body) => {
   }) 
 }
 
-const createPerfil = (body) => {
+const createPerfil = (body,pool) => {
   return new Promise(function(resolve, reject) {
     const { name, login, password} = body
     console.log(name, login, password)
@@ -42,7 +39,7 @@ const createPerfil = (body) => {
     })
   })
 }
-const deletePerfil = () => {
+const deletePerfil = (pool) => {
   return new Promise(function(resolve, reject) {
     const id = parseInt(request.params.id)
     pool.query('DELETE FROM perfil WHERE id_perfil = $1', [id], (error, results) => {

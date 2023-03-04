@@ -1,6 +1,11 @@
 * {
   margin: 0;
   padding: 0;
+  color: white;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;    
+  box-sizing: border-box;
 }
 
 
@@ -9,14 +14,19 @@ html, body, #root {
   height: 100%;
 }
 
+a{
+  text-decoration: none;
+  color: #ade4ee;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
 .mainContainer{
   height: 100% !important;
   background-color: #3A1078;
 }
 
 .loginPage{
-  color: white;
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   height: 100% !important;
   display: flex;
   justify-content: center;
@@ -44,9 +54,6 @@ html, body, #root {
 }
 
 .inputContainer{
-  -webkit-box-sizing: border-box; 
-  -moz-box-sizing: border-box;    
-  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -64,7 +71,7 @@ html, body, #root {
 }
 
 .inputContainer input{
-  height: 1.5rem;
+  height: 2.5rem;
   width: 80%;
   border: none;
   border-radius: 5px;
@@ -87,3 +94,4 @@ html, body, #root {
   border-radius: 5px;
   cursor: pointer;
 }
+
