@@ -10,7 +10,7 @@ export default function App() {
 
     return (
         <div className="mainContainer">
-            {logedin ?  <DashboardComponent userData={userData}/> :  <LoginComponent setlogedin={setlogedin} setUserData={setUserData}/>}
+            {logedin ?  <DashboardComponent userData={userData} setUserData={setUserData}/> :  <LoginComponent setlogedin={setlogedin} setUserData={setUserData}/>}
         </div>
     )
 }

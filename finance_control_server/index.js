@@ -9,7 +9,7 @@ const pool = new Pool(config);
 const perfil_model = require('./perfil_model.js')
 const pessoa_model = require('./pessoa_model.js')
 const cartao_model = require('./cartao_model.js')
-const credito_model = require('./credito_model.js')
+const credito_debito_model = require('./transacao_model')
 
 app.use(express.json())
 app.use(function (req, res, next) {
@@ -31,16 +31,31 @@ app.post('/getPerfilbyID', (req, res) => {
 
 app.post('/login', (req, res) => {
   let final_response = {}
-  perfil_model.login(req.body, pool)
+  perfil_model.login(req.body, pool) //returns perfil
     .then(response => {
       final_response = response[0];
-      pessoa_model.getPessoasFromPerfil(final_response, pool).then(response2 => {
+      pessoa_model.getPessoasFromPerfil(final_response, pool).then(response2 => { //returns pessoas
         final_response.pessoas = response2;
         Promise.all(final_response.pessoas.map(async (pessoa) => {
-          return cartao_model.getCardFromPessoa(pessoa, pool)
+          return cartao_model.getCardFromPessoa(pessoa, pool) //returns cartoes
         })).then((val) => {
           val.map((cartoes, index) => {
             final_response.pessoas[index].cartoes = cartoes
+          })
+          Promise.all(final_response.pessoas.map(async (pessoa) => {
+            return credito_debito_model.getCreditoFromPessoa(pessoa, pool) //returns creditos
+          })).then((val) => {
+            val.map((creditos, index) => {
+              final_response.pessoas[index].creditos = creditos
+            })
+            Promise.all(final_response.pessoas.map(async (pessoa) => {
+              return credito_debito_model.getDebitoFromPessoa(pessoa, pool) //returns debitos
+            })).then((val) => {
+              val.map((debitos, index) => {
+                final_response.pessoas[index].debitos = debitos
+              })
+              res.status(200).send(final_response);
+            })
           })
         })
       })
@@ -59,15 +74,50 @@ app.post('/createPerfil', (req, res) => {
     })
 })
 
-app.post('/deletePerfil', (req, res) => {
-  perfil_model.deletePerfil(req.params.id, pool)
+app.post('/createPessoa', (req, res) => {
+  console.log(req.body)
+  pessoa_model.createPessoa(req.body, pool)
     .then(response => {
-      res.status(200).send(response);
+      Promise.all(req.body.cartoes.map(async (cartao) => {
+        return cartao_model.createCartao(cartao, response, pool)
+      })).then(() => { 
+        Promise.all(req.body.creditos.map(async (credito) => {
+          return credito_debito_model.createCredito(credito, response, pool)
+        })).then(() => {
+          res.status(200).send(response[0]);
+        })
+      })
     })
     .catch(error => {
       res.status(500).send(error);
     })
 })
+
+
+app.post('/editPessoa', (req, res) => {
+  pessoa_model.editPessoa(req.body, pool).then((response) => {
+    res.status(200).send("Pessoa editada com sucesso");
+  }).catch((error) => {
+    res.status(500).send(error);
+  })
+})
+
+app.post('/createCard', (req, res) => {
+  Promise.all(cartao_model.createCard(req.body, pool)).then((response) => {
+    res.status(200).send("Cartão criado com sucesso");
+  }).catch((error) => {
+    res.status(500).send(error);
+  })
+})
+
+app.post('/createCredito', (req, res) => {
+  Promise.all(credito_debito_model.createCredito(req.body, pool)).then((response) => {
+    res.status(200).send("Credito criado com sucesso");
+  }).catch((error) => {
+    res.status(500).send(error);
+  })
+})
+
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
 })

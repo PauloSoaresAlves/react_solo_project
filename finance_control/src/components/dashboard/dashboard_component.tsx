@@ -6,7 +6,7 @@ import React from "react";
 import DashboardMain from "./dashboard_main";
 import DashboardCard from "./dashboard_card";
 import DashboardPeople from "./dashboard_people";
-export default function DashboardComponent({ userData }: { userData: UserData }) {
+export default function DashboardComponent({ userData, setUserData }: { userData: UserData , setUserData: any}) {
     const [dashboardState, setDashboardState] = React.useState("dashboard");
 
     return (
@@ -14,9 +14,11 @@ export default function DashboardComponent({ userData }: { userData: UserData })
             <DashboardHeader userData={userData} />
             <div className="sideBySide">
                 <DashboardAside userData={userData} setDashboardState={setDashboardState} />
-                {dashboardState === "dashboard"  && <DashboardMain userData={userData} />}
-                {dashboardState === "people"  && <DashboardPeople userData={userData} />}
-                {dashboardState === "card"  && <DashboardCard userData={userData} />}
+                <div className="dashboardFocus">
+                    {dashboardState === "dashboard"  && <DashboardMain userData={userData} />}
+                    {dashboardState === "people"  && <DashboardPeople userData={userData} setUserData={setUserData} />}
+                    {dashboardState === "card"  && <DashboardCard userData={userData} />}
+                </div>
             </div>
         </div>
     );

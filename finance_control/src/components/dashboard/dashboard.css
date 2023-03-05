@@ -48,4 +48,57 @@
 
 .dashboardPeople{
     padding: 10px;
+    width: 100%;
 }
+
+.dashboardPeopleCard{
+    padding: 10px;
+    margin-top: 1rem;
+    height: 25vh;
+    max-height: 25vh;
+    width: 100%;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #4E31AA, #2F58CD);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.editableInput{
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    max-width: 10rem;
+    width: 10rem;
+    border-radius: 5px;
+    outline: none;
+}
+
+.addPessoaButton{
+    background-color: transparent;
+    position: relative;
+    margin-top: 2rem;
+    height: 10vh;
+    border: dashed  5px white;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+.addPessoaButton:hover{
+    background-color: #573cb1;
+}
+
+.dashboardFocus{
+    padding: 10px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+
