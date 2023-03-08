@@ -52,7 +52,7 @@ app.post('/login', (req, res) => {
               return credito_debito_model.getDebitoFromPessoa(pessoa, pool) //returns debitos
             })).then((val) => {
               val.map((debitos, index) => {
-                final_response.pessoas[index].debitos = debitos
+                final_response.pessoas[index].despesas = debitos
               })
               res.status(200).send(final_response);
             })

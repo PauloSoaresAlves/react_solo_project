@@ -6,18 +6,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import UserData from '../../model/userData';
 import { createPessoa, editPessoa } from '../../dao/pessoa.dao';
 import { createCard } from '../../dao/card.dao';
 import { createCredito } from '../../dao/credito.dao';
+import DashboardPeopleDespesasList from './dashboard_people_despesasList';
 
 export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, setAddingPessoa }: { pessoa: Pessoa, setUserData: any, isNewPessoa?: boolean, setAddingPessoa?: any }) {
 
     const modelosCobranca = ['mensal', 'semanal', 'diário', 'trimestral', 'semestral', 'anual'];
     const [editName, setEditName] = React.useState(false);
+    const [showFullDespesas, setShowFullDespesas] = React.useState(false);
 
     const [addCard, setAddCard] = React.useState(false);
     const [addSalario, setAddSalario] = React.useState(false);
@@ -29,6 +30,7 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
     } as Credito);
 
     const [newPessoa, setNewPessoa] = React.useState(pessoa);
+
 
     function handleEditName(event: React.ChangeEvent<HTMLInputElement>) {
         if (isNewPessoa) {
@@ -109,30 +111,30 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
 
 
     return (
-        <div className='dashboardPeopleCard'> {/* Main Container */}
+        <div className={showFullDespesas ?  'dashboardPeopleCardExp' :'dashboardPeopleCard' }> {/* Main Container */}
 
-            <div style={{ 'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'height': '100%' }}>
+            <div style={{ 'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'height': '25vh' }}>
 
                 <div style={{ 'display': 'flex', 'justifyContent': 'space-around', 'flexDirection': 'column', 'width': '50%' }}> {/* Right side of flex*/}
 
                     <div style={{ 'display': 'flex', 'gap': '1rem', 'alignItems': 'center' }}> {/* Editable name */}
-                        <input type='text' value={isNewPessoa ? newPessoa.name : pessoa.name} className="editableInput" disabled={isNewPessoa? false : !editName }
-                            style={{ 'border': editName || isNewPessoa ? '2px solid white' : 'none' }} onChange={handleEditName} onBlur={blurInput} onKeyDown={handleEnter} 
-                            autoFocus={isNewPessoa ? true : false}/>
+                        <input type='text' value={isNewPessoa ? newPessoa.name : pessoa.name} className="editableInput" disabled={isNewPessoa ? false : !editName}
+                            style={{ 'border': editName || isNewPessoa ? '2px solid white' : 'none' }} onChange={handleEditName} onBlur={blurInput} onKeyDown={handleEnter}
+                            autoFocus={isNewPessoa ? true : false} />
                         <EditIcon cursor={'pointer'} onClick={() => { setEditName((x) => !x) }} />
                     </div>
 
                     <div> {/* Card list and creation */}
                         <div style={{ 'display': 'flex', 'gap': '1rem', 'alignItems': 'center' }}>
-                            <h2>Cartões: </h2>
-                            <AddBoxOutlinedIcon onClick={() => setAddCard(true)} cursor={'pointer'} />
+                            <h3>Cartões: </h3>
+                            {!isNewPessoa && <AddBoxOutlinedIcon onClick={() => setAddCard(true)} cursor={'pointer'} />}
                         </div>
                         {pessoa.cartoes.map((cartao: Cartao) => {
                             return (
                                 <div key={cartao.id_cartao} style={{ 'display': 'grid', 'gridTemplateColumns': '1fr 1fr 1fr', 'width': '80%' }}>
-                                    <h3>{cartao.nome}</h3>
-                                    <h3>Numero: {cartao.prim_digitos}</h3>
-                                    <h3>Vencimento: {cartao.vencimento.toString().padStart(2, '0')}/XX</h3>
+                                    <h4>{cartao.nome}</h4>
+                                    <h4>Numero: {cartao.prim_digitos}</h4>
+                                    <h4>Vencimento: {cartao.vencimento.toString().padStart(2, '0')}/XX</h4>
                                 </div>
                             )
                         })}
@@ -154,15 +156,15 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
 
                 <div style={{ 'width': '50%' }}> {/* Left side of flex */}
                     <div style={{ 'display': 'flex', 'gap': '1rem', 'alignItems': 'center' }}>
-                        <h2>Salários: </h2>
-                        <AddBoxOutlinedIcon onClick={() => setAddSalario(true)} cursor={'pointer'} />
+                        <h3>Salários: </h3>
+                        {!isNewPessoa && <AddBoxOutlinedIcon onClick={() => setAddSalario(true)} cursor={'pointer'} />}
                     </div>
                     {pessoa.creditos.map((credito: Credito) => {
                         return (
                             <div key={credito.id_transacao} style={{ 'display': 'grid', 'gridTemplateColumns': '1fr 1fr 1fr', 'width': '80%' }}>
-                                <h3>R${credito.valor}</h3>
-                                <h3>Intervalo: {credito.modelo_cobranca.toUpperCase()}</h3>
-                                <h3>Recebimento: {new Date(credito.data_inicial_transacao).getDate().toString().padStart(2, '0')}/XX</h3>
+                                <h4>R${credito.valor}</h4>
+                                <h4>Intervalo: {credito.modelo_cobranca.toUpperCase()}</h4>
+                                <h4>Recebimento: {new Date(credito.data_inicial_transacao).getDate().toString().padStart(2, '0')}/XX</h4>
                             </div>
                         )
                     })}
@@ -186,6 +188,14 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
                     </div>}
                 </div>
             </div>
+                <div className="despesasContainer" style={{'height' : showFullDespesas ? '25vh' : '5vh'}}>
+                    <h3>Despesas: R${pessoa.despesas.length != 0 ? pessoa.despesas.map((x)=>parseFloat(x.valor)).reduce((sum,b)=> sum+b) : 0} 
+                    {showFullDespesas ? <ExpandLessIcon onClick={()=>setShowFullDespesas((x)=>!x)} cursor={'pointer'}/> :
+                    <ExpandMoreIcon onClick={()=>setShowFullDespesas((x)=>!x)} cursor={'pointer'} />                    
+                    }</h3>
+                    {showFullDespesas && <DashboardPeopleDespesasList pessoa={pessoa}/>}
+                </div>
+                
         </div>
 
     )

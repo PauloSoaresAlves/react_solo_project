@@ -1,5 +1,6 @@
 import Cartao from "./cartao";
 import Credito from "./credito";
+import Despesa from "./despesa";
 
 export default class Pessoa {
     constructor(
@@ -7,7 +8,8 @@ export default class Pessoa {
         public name: string,
         public id_perfil: number,
         public cartoes: Cartao[],
-        public creditos: Credito[]
+        public creditos: Credito[],
+        public despesas: Despesa[]
     ) {}
 
 }

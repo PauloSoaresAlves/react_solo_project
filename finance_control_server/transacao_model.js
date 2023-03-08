@@ -17,8 +17,9 @@ module.exports = {
     getDebitoFromPessoa : (pessoa, pool) => {
         return new Promise(function(resolve, reject) {
             const { id_pessoa } = pessoa
-            pool.query(`select t.*, mc.nome as modelo_cobranca, cat.nome as categoria, fp.nome as forma_pagamento from debito d join transacao t on d.id_debito = t.id_transacao join modelo_cobranca mc on mc.id_modelo_cobranca = t.id_modelo_cobranca
-            join categoria cat on cat.id_categoria = t.id_categoria join forma_pagamento fp on fp.id_forma_pagamento = d.id_forma_pagamento where t.id_pessoa = $1`, [id_pessoa] ,(error, results) => {
+            pool.query(`select t.*, mc.nome as modelo_cobranca, cat.nome as categoria, fp.id_forma_pagamento, fp.nome as nome_forma_pagamento,car.prim_digitos from debito d join transacao t on d.id_debito = t.id_transacao join modelo_cobranca mc on mc.id_modelo_cobranca = t.id_modelo_cobranca
+            join categoria cat on cat.id_categoria = t.id_categoria join forma_pagamento fp on fp.id_forma_pagamento = d.id_forma_pagamento
+            left join cartao car on car.id_cartao = fp.id_forma_pagamento where t.id_pessoa = $1;`, [id_pessoa] ,(error, results) => {
             if (error) {
                 reject(error)
             }

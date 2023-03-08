@@ -4,7 +4,7 @@ import "./dashboard.css";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function DashboardHeader({ userData }: { userData: UserData }) {
+export default function DashboardHeader({ userData,setUserData,setlogedin }: { userData: UserData,setUserData:any,setlogedin:any }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -12,6 +12,8 @@ export default function DashboardHeader({ userData }: { userData: UserData }) {
     };
     const handleClose = () => {
         setAnchorEl(null);
+        setUserData({name: "", password: "", id_perfil: 0, pessoas: []});
+        setlogedin(false);
     };
 
 

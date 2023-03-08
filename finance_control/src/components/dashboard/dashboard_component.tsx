@@ -6,12 +6,12 @@ import React from "react";
 import DashboardMain from "./dashboard_main";
 import DashboardCard from "./dashboard_card";
 import DashboardPeople from "./dashboard_people";
-export default function DashboardComponent({ userData, setUserData }: { userData: UserData , setUserData: any}) {
+export default function DashboardComponent({ userData, setUserData,setlogedin }: { userData: UserData , setUserData: any,setlogedin: any}) {
     const [dashboardState, setDashboardState] = React.useState("dashboard");
 
     return (
         <div>
-            <DashboardHeader userData={userData} />
+            <DashboardHeader userData={userData} setUserData={setUserData} setlogedin={setlogedin} />
             <div className="sideBySide">
                 <DashboardAside userData={userData} setDashboardState={setDashboardState} />
                 <div className="dashboardFocus">
