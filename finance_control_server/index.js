@@ -8,8 +8,9 @@ const pool = new Pool(config);
 
 const perfil_model = require('./perfil_model.js')
 const pessoa_model = require('./pessoa_model.js')
-const cartao_model = require('./cartao_model.js')
-const credito_debito_model = require('./transacao_model')
+const cartao_model = require('./forma_pagamento_model.js')
+const credito_debito_model = require('./transacao_model');
+const categoria_model = require('./categoria_model.js');
 
 app.use(express.json())
 app.use(function (req, res, next) {
@@ -75,7 +76,6 @@ app.post('/createPerfil', (req, res) => {
 })
 
 app.post('/createPessoa', (req, res) => {
-  console.log(req.body)
   pessoa_model.createPessoa(req.body, pool)
     .then(response => {
       Promise.all(req.body.cartoes.map(async (cartao) => {
@@ -103,20 +103,44 @@ app.post('/editPessoa', (req, res) => {
 })
 
 app.post('/createCard', (req, res) => {
-  Promise.all(cartao_model.createCard(req.body, pool)).then((response) => {
-    res.status(200).send("Cartão criado com sucesso");
+  cartao_model.createFormaPagamento(req.body, pool).then((response) => {
+    cartao_model.createCartao(req.body, pool).then((response2) => {
+    res.status(200).send("Cartão criado com sucesso");})
   }).catch((error) => {
     res.status(500).send(error);
   })
 })
 
 app.post('/createCredito', (req, res) => {
-  Promise.all(credito_debito_model.createCredito(req.body, pool)).then((response) => {
-    res.status(200).send("Credito criado com sucesso");
+  credito_debito_model.createTransacao(req.body, pool).then((response) => {
+    credito_debito_model.createCredito(pool).then((response2) => {
+      res.status(200).send("Credito criado com sucesso");
+    })
+  }).catch((error) => {
+    console.log(error)
+    res.status(500).send(error);
+  })
+})
+
+app.post('/createDebito', (req, res) => {
+  credito_debito_model.createTransacao(req.body, pool).then((response) => {
+    credito_debito_model.createDebito(req.body, pool).then((response2) => {
+      res.status(200).send(response2);
+    })
   }).catch((error) => {
     res.status(500).send(error);
   })
 })
+
+
+
+app.post('/getCategoria', (req, res) => {
+  categoria_model.getCategorias(req.body,pool).then((response) => {
+      res.status(200).send(response);
+    }).catch((error) => {
+      res.status(500).send(error)
+    })
+});
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)

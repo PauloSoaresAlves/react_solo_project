@@ -4,7 +4,8 @@ export default class Cartao {
         public nome: string,
         public prim_digitos: string,
         public id_pessoa: number,
-        public vencimento: number
+        public vencimento: number,
+        public credito: boolean
     ) {}
 
 }

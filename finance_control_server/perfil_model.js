@@ -30,7 +30,6 @@ const  login = (body,pool) => {
 const createPerfil = (body,pool) => {
   return new Promise(function(resolve, reject) {
     const { name, login, password} = body
-    console.log(name, login, password)
     pool.query('INSERT INTO perfil (name, login, password) VALUES ($1, $2, $3) RETURNING *', [name, login, password], (error, results) => {
       if (error) {
         reject(error)

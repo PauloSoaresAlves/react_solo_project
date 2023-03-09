@@ -23,7 +23,6 @@ export default  function LoginComponent({setlogedin,setUserData} : any) {
         }else {
             let result = await login(formState.login,formState.password);
             if(result) {
-                console.log(result)
                 setUserData(result);
                 setlogedin(true);
             }

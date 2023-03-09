@@ -71,7 +71,6 @@ export default function DashboardPeopleDespesasList({ pessoa }: { pessoa: Pessoa
         }
     });
 
-    console.log(rows);
 
     return (
         <div className="despesasListing">

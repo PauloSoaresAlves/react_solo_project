@@ -27,7 +27,6 @@ module.exports = {
     editPessoa: (pessoa, pool) => {
         return new Promise(function(resolve, reject) {
             const { name, id_pessoa } = pessoa
-            console.log(name, id_pessoa)
             pool.query(`UPDATE pessoa SET name = $1 WHERE id_pessoa = $2`, [name, id_pessoa] ,(error, results) => {
             if (error) {
                 reject(error)

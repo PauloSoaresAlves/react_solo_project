@@ -11,19 +11,22 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import UserData from '../../model/userData';
 import { createPessoa, editPessoa } from '../../dao/pessoa.dao';
 import { createCard } from '../../dao/card.dao';
-import { createCredito } from '../../dao/credito.dao';
+import { createCredito } from '../../dao/transacao.dao';
 import DashboardPeopleDespesasList from './dashboard_people_despesasList';
+import DespesasDialog from './dashboard_people_despesasDialog';
 
-export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, setAddingPessoa }: { pessoa: Pessoa, setUserData: any, isNewPessoa?: boolean, setAddingPessoa?: any }) {
+export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, setAddingPessoa, categorias }: 
+    { pessoa: Pessoa, setUserData: any, isNewPessoa?: boolean, setAddingPessoa?: any , categorias: any}) {
 
-    const modelosCobranca = ['mensal', 'semanal', 'diário', 'trimestral', 'semestral', 'anual'];
+    const modelosCobranca = ['Mensal', 'Semanal', 'Diário', 'Trimestral', 'Semestral', 'Anual'];
     const [editName, setEditName] = React.useState(false);
     const [showFullDespesas, setShowFullDespesas] = React.useState(false);
+    const [showAddDespesas, setshowAddDespesas] = React.useState(false);
 
     const [addCard, setAddCard] = React.useState(false);
     const [addSalario, setAddSalario] = React.useState(false);
 
-    const [newCard, setNewCard] = React.useState({ id_cartao: 0, nome: '', prim_digitos: '', vencimento: 0, id_pessoa: pessoa.id_pessoa } as Cartao);
+    const [newCard, setNewCard] = React.useState({ id_cartao: 0, nome: '', prim_digitos: '', vencimento: 0, id_pessoa: pessoa.id_pessoa, credito: true } as Cartao);
     const [newSalario, setNewSalario] = React.useState({
         id_transacao: 0, categoria: 'Salário', data_inicial_transacao: new Date(), duracao: -1,
         id_categoria: 0, id_modelo_cobranca: 0, id_pessoa: pessoa.id_pessoa, modelo_cobranca: 'mensal', valor: 0
@@ -189,13 +192,15 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
                 </div>
             </div>
                 <div className="despesasContainer" style={{'height' : showFullDespesas ? '25vh' : '5vh'}}>
-                    <h3>Despesas: R${pessoa.despesas.length != 0 ? pessoa.despesas.map((x)=>parseFloat(x.valor)).reduce((sum,b)=> sum+b) : 0} 
+                    <h3>Despesas: R${pessoa.despesas.length != 0 ? pessoa.despesas.map((x)=>parseFloat(x.valor)).reduce((sum,b)=> sum+b) : 0}
+                    <AddBoxOutlinedIcon onClick={()=>setshowAddDespesas((x)=>!x)} cursor={'pointer'}/> 
                     {showFullDespesas ? <ExpandLessIcon onClick={()=>setShowFullDespesas((x)=>!x)} cursor={'pointer'}/> :
                     <ExpandMoreIcon onClick={()=>setShowFullDespesas((x)=>!x)} cursor={'pointer'} />                    
                     }</h3>
                     {showFullDespesas && <DashboardPeopleDespesasList pessoa={pessoa}/>}
                 </div>
-                
+                <DespesasDialog pessoa={pessoa} categorias={categorias} setshowAddDespesas={setshowAddDespesas} showAddDespesas={showAddDespesas}
+                setUserData={setUserData}/>
         </div>
 
     )
