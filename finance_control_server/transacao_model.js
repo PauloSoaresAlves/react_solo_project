@@ -44,10 +44,10 @@ module.exports = {
     createTransacao: (debito, pool) => {
         return new Promise(function (resolve, reject) {
 
-            const { valor, id_pessoa, id_modelo_cobranca, id_categoria, data_inicial_transacao, duracao} = debito
+            const { valor, id_pessoa, id_modelo_cobranca, id_categoria, data_inicial_transacao, duracao,descricao} = debito
             console.log(debito)
-            pool.query(`insert into transacao (valor, id_pessoa, id_modelo_cobranca, id_categoria,data_inicial_transacao,duracao) values ($1, $2, $3, $4, $5,$6) ;`,
-                [valor, id_pessoa, id_modelo_cobranca, id_categoria, data_inicial_transacao, duracao], (error, results) => {
+            pool.query(`insert into transacao (valor, id_pessoa, id_modelo_cobranca, id_categoria,data_inicial_transacao,duracao, descricao) values ($1, $2, $3, $4, $5,$6,$7) ;`,
+                [valor, id_pessoa, id_modelo_cobranca, id_categoria, data_inicial_transacao, duracao,descricao], (error, results) => {
                     if (error) {
                         reject(error)
                     }
@@ -59,8 +59,8 @@ module.exports = {
     createDebito: (body, pool) => {
     
     return new Promise(function (resolve, reject) {
-            const { id_forma_pagamento } = body
-            pool.query(`insert into debito (id_debito, id_forma_pagamento) select max(id_transacao), $1 from transacao returning id_debito;`, [id_forma_pagamento], (error, results) => {
+            const { id_forma_pagamento, credito } = body
+            pool.query(`insert into debito (id_debito, id_forma_pagamento, credito) select max(id_transacao), $1, $2 from transacao returning id_debito;`, [id_forma_pagamento,credito], (error, results) => {
                 if (error) {
                     reject(error)
                 }

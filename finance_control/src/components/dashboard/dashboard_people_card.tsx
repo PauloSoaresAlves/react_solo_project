@@ -2,21 +2,27 @@ import React from 'react';
 import Cartao from '../../model/cartao';
 import Credito from '../../model/credito';
 import Pessoa from '../../model/pessoa';
+import { MathHelper } from '../../util/MathHelper';
+
 import EditIcon from '@mui/icons-material/Edit';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
+
 import UserData from '../../model/userData';
 import { createPessoa, editPessoa } from '../../dao/pessoa.dao';
 import { createCard } from '../../dao/card.dao';
 import { createCredito } from '../../dao/transacao.dao';
 import DashboardPeopleDespesasList from './dashboard_people_despesasList';
 import DespesasDialog from './dashboard_people_despesasDialog';
+import { TextField, Tooltip } from '@mui/material';
 
-export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, setAddingPessoa, categorias }: 
-    { pessoa: Pessoa, setUserData: any, isNewPessoa?: boolean, setAddingPessoa?: any , categorias: any}) {
+export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, setAddingPessoa, categorias }:
+    { pessoa: Pessoa, setUserData: any, isNewPessoa?: boolean, setAddingPessoa?: any, categorias: any }) {
 
     const modelosCobranca = ['Mensal', 'Semanal', 'Diário', 'Trimestral', 'Semestral', 'Anual'];
     const [editName, setEditName] = React.useState(false);
@@ -26,10 +32,10 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
     const [addCard, setAddCard] = React.useState(false);
     const [addSalario, setAddSalario] = React.useState(false);
 
-    const [newCard, setNewCard] = React.useState({ id_cartao: 0, nome: '', prim_digitos: '', vencimento: 0, id_pessoa: pessoa.id_pessoa, credito: true } as Cartao);
+    const [newCard, setNewCard] = React.useState({ id_cartao: 0, nome: '', prim_digitos: '', vencimento: 0, id_pessoa: pessoa.id_pessoa, credito: false } as Cartao);
     const [newSalario, setNewSalario] = React.useState({
         id_transacao: 0, categoria: 'Salário', data_inicial_transacao: new Date(), duracao: -1,
-        id_categoria: 0, id_modelo_cobranca: 0, id_pessoa: pessoa.id_pessoa, modelo_cobranca: 'mensal', valor: 0
+        id_categoria: 0, id_modelo_cobranca: 0, id_pessoa: pessoa.id_pessoa, modelo_cobranca: 'mensal', valor: 0, descricao: ''
     } as Credito);
 
     const [newPessoa, setNewPessoa] = React.useState(pessoa);
@@ -113,8 +119,10 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
 
 
 
+
+
     return (
-        <div className={showFullDespesas ?  'dashboardPeopleCardExp' :'dashboardPeopleCard' }> {/* Main Container */}
+        <div className={showFullDespesas ? 'dashboardPeopleCardExp' : 'dashboardPeopleCard'}> {/* Main Container */}
 
             <div style={{ 'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'height': '25vh' }}>
 
@@ -141,15 +149,21 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
                                 </div>
                             )
                         })}
-                        {addCard && <div style={{ 'display': 'flex', 'alignItems': 'center', 'gap': '1rem' }}>
+                        {addCard && <div style={{ 'display': 'flex', 'alignItems': 'center', 'gap': '1rem', 'marginTop': '0.5rem' }}>
                             <div style={{ 'display': 'grid', 'gridTemplateColumns': '1fr 1fr 1fr', 'width': '80%' }}>
-                                <input type='text' value={newCard.nome} className='editableInput' onChange={(event) => setNewCard((x) => { return { ...x, nome: event.target.value } })}
-                                    style={{ 'border': '2px solid white' }} />
-                                <input type='text' value={newCard.prim_digitos} className='editableInput' onChange={(event) => setNewCard((x) => { return { ...x, prim_digitos: event.target.value } })}
-                                    style={{ 'border': '2px solid white' }} />
-                                <input type='number' value={newCard.vencimento} className='editableInput' onChange={(event) => setNewCard((x) => { return { ...x, vencimento: parseInt(event.target.value) } })}
-                                    style={{ 'border': '2px solid white' }} />
+                                <TextField type={'text'} value={newCard.nome} onChange={(event) => setNewCard((x) => { return { ...x, nome: event.target.value } })}
+                                    className='editableInput' label='Nome do cartão' size='small'>
+                                </TextField>
+                                <TextField type={'text'} value={newCard.prim_digitos} onChange={(event) => setNewCard((x) => { return { ...x, prim_digitos: event.target.value } })}
+                                    className='editableInput' label='Primeiros 4 Dígitos' size='small'>
+                                </TextField>
+                                <TextField type={'number'} value={newCard.vencimento} onChange={(event) => setNewCard((x) => { return { ...x, vencimento: parseInt(event.target.value) } })}
+                                    className='editableInput' label='Dia do vencimento' size='small' disabled={!newCard.credito}>
+                                </TextField>
                             </div>
+                            {newCard.credito ?
+                                <Tooltip title="Crédito e Débito"><CreditCardIcon onClick={() => setNewCard((x) => { return { ...x, credito: false } })} cursor="pointer" /></Tooltip> :
+                                <Tooltip title="Apenas Débito"><CreditCardOffIcon onClick={() => setNewCard((x) => { return { ...x, credito: true } })} cursor="pointer" /></Tooltip>}
                             <CheckOutlinedIcon cursor={'pointer'} onClick={handleAddCard} />
                             <ClearOutlinedIcon cursor={'pointer'} onClick={() => { setAddCard((x) => !x) }} />
                         </div>}
@@ -189,18 +203,20 @@ export default function DashboardPeopleCard({ pessoa, setUserData, isNewPessoa, 
                         <CheckOutlinedIcon cursor={'pointer'} onClick={handleAddSalario} />
                         <ClearOutlinedIcon cursor={'pointer'} onClick={() => { setAddSalario((x) => !x) }} />
                     </div>}
+                    <h3>Total: R${pessoa.creditos.length != 0 ? 
+                                pessoa.creditos.map((x) => MathHelper.multiplyByPaymentMode(x.valor,0,x.id_modelo_cobranca)).reduce((sum, b) => sum + b) : 0}/Mês</h3>
                 </div>
             </div>
-                <div className="despesasContainer" style={{'height' : showFullDespesas ? '25vh' : '5vh'}}>
-                    <h3>Despesas: R${pessoa.despesas.length != 0 ? pessoa.despesas.map((x)=>parseFloat(x.valor)).reduce((sum,b)=> sum+b) : 0}
-                    <AddBoxOutlinedIcon onClick={()=>setshowAddDespesas((x)=>!x)} cursor={'pointer'}/> 
-                    {showFullDespesas ? <ExpandLessIcon onClick={()=>setShowFullDespesas((x)=>!x)} cursor={'pointer'}/> :
-                    <ExpandMoreIcon onClick={()=>setShowFullDespesas((x)=>!x)} cursor={'pointer'} />                    
+            <div className="despesasContainer" style={{ 'height': showFullDespesas ? '25vh' : '5vh' }}>
+                <h3>Despesas: R${pessoa.despesas.length != 0 ? pessoa.despesas.map((x) => x.valor).reduce((sum, b) => sum + b) : 0}
+                    <AddBoxOutlinedIcon onClick={() => setshowAddDespesas((x) => !x)} cursor={'pointer'} />
+                    {showFullDespesas ? <ExpandLessIcon onClick={() => setShowFullDespesas((x) => !x)} cursor={'pointer'} /> :
+                        <ExpandMoreIcon onClick={() => setShowFullDespesas((x) => !x)} cursor={'pointer'} />
                     }</h3>
-                    {showFullDespesas && <DashboardPeopleDespesasList pessoa={pessoa}/>}
-                </div>
-                <DespesasDialog pessoa={pessoa} categorias={categorias} setshowAddDespesas={setshowAddDespesas} showAddDespesas={showAddDespesas}
-                setUserData={setUserData}/>
+                {showFullDespesas && <DashboardPeopleDespesasList pessoa={pessoa} />}
+            </div>
+            <DespesasDialog pessoa={pessoa} categorias={categorias} setshowAddDespesas={setshowAddDespesas} showAddDespesas={showAddDespesas}
+                setUserData={setUserData} />
         </div>
 
     )

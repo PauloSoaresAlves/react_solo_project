@@ -15,6 +15,14 @@ export default function DashboardComponent({ userData, setUserData,setlogedin }:
         getCategorias(userData.id_perfil).then((result) => {
             setCategorias(result);
         });
+        userData.pessoas.forEach((pessoa) => {
+            pessoa.creditos.map((credito) => {
+                credito.valor = parseFloat(credito.valor as unknown as string);
+            });
+            pessoa.despesas.map((despesa) => {
+                despesa.valor = parseFloat(despesa.valor as unknown as string);
+            });
+        });
     }, []);
 
     return (

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {getPerfil,login,createPerfil} from "../../dao/perfil.dao";
+import UserData from "../../model/userData";
 import LoginForm from "./login_form";
 import RegisterForm from "./register_form";
 

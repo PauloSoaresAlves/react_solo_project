@@ -2,6 +2,7 @@ export default class Despesa {
     constructor(
         public id_transacao: number,
         public valor: number,
+        public descricao: string,
         public id_pessoa: number,
         public id_categoria: number,
         public data_inicial_transacao: Date,
@@ -11,7 +12,8 @@ export default class Despesa {
         public categoria: string,
         public id_forma_pagamento: number,
         public nome_forma_pagamento: string,
-        public prim_digitos: string
+        public prim_digitos: string,
+        public credito: boolean
     ) {}
 
 }

@@ -2,6 +2,7 @@ export default class Credito {
     constructor(
         public id_transacao: number,
         public valor: number,
+        public descricao: string,
         public id_pessoa: number,
         public id_categoria: number,
         public data_inicial_transacao: Date,

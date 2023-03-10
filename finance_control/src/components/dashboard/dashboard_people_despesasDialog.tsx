@@ -4,10 +4,11 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
 import DialogTitle from '@mui/material/DialogTitle';
 import Pessoa from '../../model/pessoa';
-import { Checkbox, FormControlLabel, MenuItem, Select } from '@mui/material';
+import { Checkbox, FormControlLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import Despesa from '../../model/despesa';
 import Cartao from '../../model/cartao';
 import { createDebito } from '../../dao/transacao.dao';
@@ -18,7 +19,7 @@ export default function DespesasDialog({ showAddDespesas, pessoa, setshowAddDesp
 
     const [disableParcelas, setdisableParcelas] = React.useState(false);
     const [despesa, setdespesa] = React.useState({categoria:'',data_inicial_transacao:new Date(),duracao:0,id_categoria:0,id_forma_pagamento:0,id_modelo_cobranca:0,
-id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagamento:'',prim_digitos:'',valor:0} as Despesa)
+id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagamento:'',prim_digitos:'',valor:0, descricao:'', credito: false} as Despesa)
     const [id_cartao, setIDCartao] = React.useState(0);
     const modelosCobranca = ['Mensal', 'Semanal', 'Diário', 'Trimestral', 'Semestral', 'Anual'];
     const formasPagamento = ['PIX','Dinheiro','Cheque','Boleto','Cartão'];
@@ -32,7 +33,9 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
         if (despesa.id_forma_pagamento === 4) {
             despesa.id_forma_pagamento = id_cartao;
             despesa.prim_digitos = pessoa.cartoes.filter((cartao: Cartao) => cartao.id_cartao === id_cartao)[0].prim_digitos;
-        } 
+        } else {
+            despesa.credito = false;
+        }
         despesa.categoria = categorias.filter((categoria: any) => categoria.id_categoria === despesa.id_categoria)[0].nome;
         
         createDebito(despesa).then((res) => {
@@ -66,8 +69,21 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                         gap: '10px',
                     },
                 }}>
-                <DialogTitle>Add new expense to {pessoa.name}</DialogTitle>
+                <DialogTitle>Adicionar nova despesa á {pessoa.name}</DialogTitle>
                 <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="descricao"
+                        label="Descrição"
+                        type="text"
+                        name='descricao'
+                        onChange={handleFormEdit}
+                        value={despesa.descricao}
+                        fullWidth
+                        variant="standard"
+                        style={{ marginBottom: '10px' }}
+                    />
                     <TextField
                         autoFocus
                         margin="dense"
@@ -85,7 +101,7 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                         autoFocus
                         margin="dense"
                         id="data"
-                        label="Primeiro vencimento"
+                        label="Primeiro pagamento"
                         type="date"
                         name='data_inicial_transacao'
                         onChange={handleFormEdit}
@@ -111,6 +127,22 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                             )
                         })}
                     </TextField>
+                    <div style={{ marginBottom: '10px', display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="parcelas"
+                            label="Número de parcelas"
+                            type="number"
+                            variant="standard"
+                            disabled={disableParcelas}
+                            value={despesa.duracao}
+                            name="duracao"
+                            onChange={handleFormEdit}
+                            style={{ width: '50%' }}
+                        />
+                        <FormControlLabel control={<Checkbox checked={disableParcelas} onChange={handleFormEdit} name="disableDuracao" />} label="Tempo indefinido" />
+                    </div>
                     <TextField
                         value={despesa.id_modelo_cobranca}
                         onChange={handleFormEdit}
@@ -121,6 +153,7 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                         label="Intervalo de cobrança"
                         fullWidth
                         style={{ marginBottom: '10px' }}
+                        disabled={despesa.duracao === 0}
                     >
                         {modelosCobranca.map((modelo, index) => {
                             return (
@@ -137,7 +170,7 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                         name='id_forma_pagamento'
                         id="forma_pagamento"
                         label="Forma de pagamento"
-                        style={{ marginBottom: '10px' , width: '45%'}}
+                        style={{ marginBottom: '10px' , width: '40%'}}
                     >
                         {formasPagamento.map((forma, index) => {
                             return (
@@ -145,7 +178,6 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                             )
                         })}
                     </TextField>
-                    {despesa.id_forma_pagamento === 4 && 
                     <TextField
                         value={id_cartao}
                         onChange={(e) => setIDCartao(e.target.value as unknown as number)}
@@ -154,25 +186,18 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
                         name='cartao'
                         id="cartao"
                         label="Selecione o cartão"
-                        style={{ marginBottom: '10px', width: '45%'}}
+                        style={{ marginBottom: '10px', width: '40%'}}
+                        disabled={despesa.id_forma_pagamento !== 4}
                     >
                         {pessoa.cartoes.map((cartao) => <MenuItem key={cartao.id_cartao} value={cartao.id_cartao}>{cartao.nome}</MenuItem>)}
-                    </TextField>}
-                    </div>
-                    <div style={{ marginBottom: '10px', display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center' }}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="parcelas"
-                            label="parcelas"
-                            type="number"
-                            variant="standard"
-                            disabled={disableParcelas}
-                            value={despesa.duracao}
-                            name="duracao"
-                            onChange={handleFormEdit}
-                        />
-                        <FormControlLabel control={<Checkbox checked={disableParcelas} onChange={handleFormEdit} name="disableDuracao" />} label="Tempo indefinido" />
+                    </TextField>
+                    { despesa.credito ?
+                        <Tooltip title="Crédito e Débito"><CreditCardIcon onClick={() => setdespesa((x) => { return { ...x, credito: false } })} 
+                        cursor={despesa.id_forma_pagamento !== 4 ? 'not-allowed' : 'pointer'} 
+                        sx={{fill: despesa.id_forma_pagamento !== 4 ? 'gray !important' : 'white'}}/></Tooltip> :
+                        <Tooltip title="Apenas Débito"><CreditCardOffIcon onClick={() => setdespesa((x) => { return { ...x, credito: true } })} 
+                        cursor={despesa.id_forma_pagamento !== 4 ? 'not-allowed' : 'pointer'} 
+                        sx={{fill: despesa.id_forma_pagamento !== 4 ? 'gray !important' : 'white'}}/></Tooltip> }
                     </div>
                 </DialogContent>
                 <DialogActions>

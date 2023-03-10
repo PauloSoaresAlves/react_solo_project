@@ -5,6 +5,7 @@ import Pessoa from '../../model/pessoa';
 export default function DashboardPeopleDespesasList({ pessoa }: { pessoa: Pessoa }) {
 
     const columns: GridColDef[] = [
+        { field : 'desc', headerName: 'Descrição', flex: 1},
         { field: 'cat', headerName: 'Categoría', flex: 1},
         { field: 'val', headerName: 'Valor', type: 'number' , flex: 1},
         { field: 'date', headerName: 'Data de Vencimento', type: 'date' , flex: 1},
@@ -25,7 +26,7 @@ export default function DashboardPeopleDespesasList({ pessoa }: { pessoa: Pessoa
     function calcPercents() {
         let total = 0;
         pessoa.despesas.forEach((despesa) => {
-            total += parseInt(despesa.valor);
+            total += despesa.valor;
         });
         pessoa.despesas.forEach((despesa) => {
             percents.push((despesa.valor / total)*100);
@@ -64,6 +65,7 @@ export default function DashboardPeopleDespesasList({ pessoa }: { pessoa: Pessoa
         }
         return {
             id: index,
+            desc: despesa.descricao,
             cat: despesa.categoria,
             val: despesa.valor,
             date: DateVenc,
