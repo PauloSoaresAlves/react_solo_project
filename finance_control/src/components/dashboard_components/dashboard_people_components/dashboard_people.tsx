@@ -1,6 +1,6 @@
 import React from 'react';
-import Pessoa from '../../model/pessoa';
-import UserData from '../../model/userData';
+import Pessoa from '../../../model/pessoa';
+import UserData from '../../../model/userData';
 import DashboardPeopleCard from './dashboard_people_card';
 
 export default function DashboardPeople({ userData, setUserData, categorias }: { userData: UserData, setUserData: any , categorias: any}) {

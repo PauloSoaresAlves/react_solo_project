@@ -4,8 +4,8 @@ import DashboardAside from "./dashboard_aside";
 import DashboardHeader from "./dashboard_header";
 import React from "react";
 import DashboardMain from "./dashboard_main";
-import DashboardCard from "./dashboard_card";
-import DashboardPeople from "./dashboard_people";
+import DashboardCard from "./dashboard_card_components/dashboard_card";
+import DashboardPeople from "./dashboard_people_components/dashboard_people";
 import { getCategorias } from "../../dao/categoria.dao";
 export default function DashboardComponent({ userData, setUserData,setlogedin }: { userData: UserData , setUserData: any,setlogedin: any}) {
     const [dashboardState, setDashboardState] = React.useState("dashboard");
@@ -33,7 +33,7 @@ export default function DashboardComponent({ userData, setUserData,setlogedin }:
                 <div className="dashboardFocus">
                     {dashboardState === "dashboard"  && <DashboardMain userData={userData} />}
                     {dashboardState === "people"  && <DashboardPeople userData={userData} setUserData={setUserData} categorias={categorias} />}
-                    {dashboardState === "card"  && <DashboardCard userData={userData} />}
+                    {dashboardState === "card"  && <DashboardCard userData={userData} setUserData={setUserData} />}
                 </div>
             </div>
         </div>

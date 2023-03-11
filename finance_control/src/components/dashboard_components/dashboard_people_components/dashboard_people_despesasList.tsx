@@ -1,6 +1,6 @@
 import react from 'react';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import Pessoa from '../../model/pessoa';
+import Pessoa from '../../../model/pessoa';
 
 export default function DashboardPeopleDespesasList({ pessoa }: { pessoa: Pessoa }) {
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import DashboardComponent from './components/dashboard/dashboard_component';
+import DashboardComponent from './components/dashboard_components/dashboard_component';
 import LoginComponent from './components/loginComponents/login_component'
 
 export default function App() {

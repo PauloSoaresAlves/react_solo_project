@@ -1,8 +1,8 @@
 import React from 'react';
-import Cartao from '../../model/cartao';
-import Credito from '../../model/credito';
-import Pessoa from '../../model/pessoa';
-import { MathHelper } from '../../util/MathHelper';
+import Cartao from '../../../model/cartao';
+import Credito from '../../../model/credito';
+import Pessoa from '../../../model/pessoa';
+import { MathHelper } from '../../../util/MathHelper';
 
 import EditIcon from '@mui/icons-material/Edit';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
@@ -13,10 +13,10 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
 
-import UserData from '../../model/userData';
-import { createPessoa, editPessoa } from '../../dao/pessoa.dao';
-import { createCard } from '../../dao/card.dao';
-import { createCredito } from '../../dao/transacao.dao';
+import UserData from '../../../model/userData';
+import { createPessoa, editPessoa } from '../../../dao/pessoa.dao';
+import { createCard } from '../../../dao/cartao.dao';
+import { createCredito } from '../../../dao/transacao.dao';
 import DashboardPeopleDespesasList from './dashboard_people_despesasList';
 import DespesasDialog from './dashboard_people_despesasDialog';
 import { TextField, Tooltip } from '@mui/material';

@@ -1,0 +1,61 @@
+.inline_icon{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.css-cppmpw-MuiDivider-root::before, .css-cppmpw-MuiDivider-root::after{
+    border-color: white !important;
+}
+
+.dashboardCardCard{
+    height: 8vh;
+    max-height: 8vh;
+    background-image: linear-gradient(to right, #4E31AA, #2F58CD);
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.dashboardCardCardExp{
+    height: 60vh;
+    max-height: 60vh;
+    background-image: linear-gradient(to right, #4E31AA, #2F58CD);
+    border-radius: 10px;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dashboardCardCardHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8vh;
+    padding: 0 2rem;
+}
+
+.dashboardCardCardFooter{
+    display: flex;
+    justify-content: right;
+    margin-top: 1rem;
+    padding: 2rem;
+}
+
+.css-1x51dt5-MuiInputBase-input-MuiInput-input.Mui-disabled{
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+}
+
+
+.css-v4u5dn-MuiInputBase-root-MuiInput-root.Mui-disabled:before{
+    border: none !important;
+}
+
+.css-v4u5dn-MuiInputBase-root-MuiInput-root:before{
+    border-bottom: 1px solid white !important;
+}
+
+.dashboardCardTextfield{
+    width: 20%;
+}

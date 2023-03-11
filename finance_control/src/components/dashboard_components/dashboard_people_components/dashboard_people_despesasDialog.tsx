@@ -7,12 +7,12 @@ import DialogContent from '@mui/material/DialogContent';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
 import DialogTitle from '@mui/material/DialogTitle';
-import Pessoa from '../../model/pessoa';
+import Pessoa from '../../../model/pessoa';
 import { Checkbox, FormControlLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
-import Despesa from '../../model/despesa';
-import Cartao from '../../model/cartao';
-import { createDebito } from '../../dao/transacao.dao';
-import UserData from '../../model/userData';
+import Despesa from '../../../model/despesa';
+import Cartao from '../../../model/cartao';
+import { createDebito } from '../../../dao/transacao.dao';
+import UserData from '../../../model/userData';
 
 export default function DespesasDialog({ showAddDespesas, pessoa, setshowAddDespesas, categorias,setUserData }: 
     { showAddDespesas: boolean, pessoa: Pessoa, setshowAddDespesas: any,categorias: any,setUserData:any }) {
@@ -38,7 +38,7 @@ id_pessoa: pessoa.id_pessoa, id_transacao: 0,modelo_cobranca:'',nome_forma_pagam
         }
         despesa.categoria = categorias.filter((categoria: any) => categoria.id_categoria === despesa.id_categoria)[0].nome;
         
-        createDebito(despesa).then((res) => {
+        createDebito(despesa).then((res: { id_debito: any; }[]) => {
           despesa.id_transacao = res[0].id_debito; 
           setUserData((x: UserData) => {
             let newUserData = { ...x };
